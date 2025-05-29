@@ -18,19 +18,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class TeacherService implements ITeacherService {
 
     private final TeacherRepository teacherRepository;
     private final RegionRepository regionRepository;
     private final Mapper mapper;
 
-//    @Autowired
-//    public TeacherService(TeacherRepository teacherRepository, RegionRepository regionRepository, Mapper mapper) {
-//        this.teacherRepository = teacherRepository;
-//        this.regionRepository = regionRepository;
-//        this.mapper = mapper;
-//    }
+    @Autowired
+    public TeacherService(TeacherRepository teacherRepository, RegionRepository regionRepository, Mapper mapper) {
+        this.teacherRepository = teacherRepository;
+        this.regionRepository = regionRepository;
+        this.mapper = mapper;
+    }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
