@@ -57,7 +57,7 @@ public class TeacherController {
             TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(savedTeacher);
             //model.addAttribute("teacher", savedTeacher); -- request scope
             redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(savedTeacher));
-            return "redirect:/school/success";
+            return "redirect:/school/teachers";
         } catch (EntityAlreadyExistsException | EntityInvalidArgumentException e) {
             LOGGER.error("Teacher with vat={} not inserted", teacherInsertDTO.getVat(), e);
             model.addAttribute("regions", regionService.findAllRegions()); // Re-populate
