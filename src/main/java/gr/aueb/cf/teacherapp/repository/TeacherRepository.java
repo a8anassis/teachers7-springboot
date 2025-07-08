@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 //@Repository
-public interface TeacherRepository extends JpaRepository<Teacher, Long>, JpaSpecificationExecutor<Teacher> {
+public interface TeacherRepository
+        extends JpaRepository<Teacher, Long>, JpaSpecificationExecutor<Teacher> {
     List<Teacher> findByRegionId(Long id);
     Optional<Teacher> findByUuid(String uuid);
     Optional<Teacher> findByVat(String vat);

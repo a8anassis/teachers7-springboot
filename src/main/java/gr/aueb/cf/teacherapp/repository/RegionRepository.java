@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 //@Repository
-public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecificationExecutor<Region> {
+public interface RegionRepository
+        extends JpaRepository<Region, Long>, JpaSpecificationExecutor<Region> {
 }
