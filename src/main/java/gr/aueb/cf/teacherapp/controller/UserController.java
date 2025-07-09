@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/users/register")
     public String getUserForm(Model model) {
         model.addAttribute("userInsertDTO", new UserInsertDTO());
-        return "user-form";
+        return "user-form2";
     }
 
     @PostMapping("/users/register")
@@ -39,7 +39,7 @@ public class UserController {
                              Model model, RedirectAttributes attrs) {
 
         if (bindingResult.hasErrors()) {
-            return "user-form";
+            return "user-form2";
         }
 
         User user = mapper.mapToUserEntity(userInsertDTO);

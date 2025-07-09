@@ -1,65 +1,240 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <title>Paginated Teachers List</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+<!--    &lt;!&ndash; Bootstrap Icons &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">-->
+
+<!--    <link rel="stylesheet" th:href="@{/css/main.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/css/header.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/css/footer.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/css/teachers.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="~{fragments/header :: headerFragment}"></div>-->
+
+<!--<h1>Teachers List</h1>-->
+
+<!--<div class="main-content">-->
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>UUID</th>-->
+<!--            <th>Firstname</th>-->
+<!--            <th>Lastname</th>-->
+<!--            <th>VAT</th>-->
+<!--            <th>Region</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--&lt;!&ndash;        sec:authorize="hasRole('ADMIN')&ndash;&gt;-->
+<!--        &lt;!&ndash; Iterate over the content of the current page &ndash;&gt;-->
+<!--        <tr th:each="teacher : ${teachersPage.content}">-->
+<!--            <td th:text="${teacher.id}"></td>-->
+<!--            <td th:text="${teacher.uuid}"></td>-->
+<!--            <td th:text="${teacher.firstname}"></td>-->
+<!--            <td th:text="${teacher.lastname}"></td>-->
+<!--            <td th:text="${teacher.vat}"></td>-->
+<!--            <td th:text="${teacher.region}"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <div class="pagination-controls">-->
+<!--        &lt;!&ndash; Link to first page (disabled if already on the first page) &ndash;&gt;-->
+<!--        <a th:if="${currentPage > 0}" th:href="@{/school/teachers(page=0, size=${teachersPage.size})}">&laquo; First</a>-->
+<!--        <span th:if="${currentPage == 0}" class="disabled">&laquo; First</span>-->
+
+<!--        &lt;!&ndash; Link to previous page (disabled if already on the first page) &ndash;&gt;-->
+<!--        <a th:if="${currentPage > 0}" th:href="@{/school/teachers(page=${currentPage - 1}, size=${teachersPage.size})}">&lsaquo; Prev</a>-->
+<!--        <span th:if="${currentPage == 0}" class="disabled">&lsaquo; Prev</span>-->
+
+<!--        &lt;!&ndash; Display current page / total pages &ndash;&gt;-->
+<!--        <span th:text="${currentPage + 1} + ' / ' + ${totalPages}"></span>-->
+
+<!--        &lt;!&ndash; Link to next page (disabled if on the last page) &ndash;&gt;-->
+<!--        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/school/teachers(page=${currentPage + 1}, size=${teachersPage.size})}">Next &rsaquo;</a>-->
+<!--        <span th:if="${currentPage + 1 == totalPages}" class="disabled">Next &rsaquo;</span>-->
+
+<!--        &lt;!&ndash; Link to last page (disabled if already on the last page) &ndash;&gt;-->
+<!--        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/school/teachers(page=${totalPages - 1}, size=${teachersPage.size})}">Last &raquo;</a>-->
+<!--        <span th:if="${currentPage + 1 == totalPages}" class="disabled">Last &raquo;</span>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div th:replace="~{fragments/footer :: footerFragment}"></div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Paginated Teachers List</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/teachers.css}">
+        <link rel="stylesheet" th:href="@{/css/main.css}">
+        <link rel="stylesheet" th:href="@{/css/header.css}">
+        <link rel="stylesheet" th:href="@{/css/footer.css}">
+        <link rel="stylesheet" th:href="@{/css/teachers.css}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #1a237e;
+        }
+
+        .teacher-table {
+            width: 90vw;
+            margin: 20px auto;
+            border: 1px solid #dee2e6;
+            border-collapse: collapse;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-table thead th {
+            background: var(--dark-blue);
+            color: #fff;
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .teacher-table tbody td {
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+        }
+
+        .teacher-table tbody tr:nth-of-type(even) {
+            background-color: #f8f9fa;
+        }
+
+        .teacher-table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+            color: var(--dark-blue);
+        }
+
+        .action-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            width: 90vw;
+            margin: 0 auto;
+        }
+
+        .pagination-controls {
+            width: 90%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .pagination-controls .page-item.active .page-link {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+
+        .pagination-controls .page-link {
+            color: var(--dark-blue);
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: headerFragment}"></div>
 
-<h1>Teachers List</h1>
-
 <div class="main-content">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>UUID</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>VAT</th>
-            <th>Region</th>
-        </tr>
-        </thead>
-        <tbody>
-<!--        sec:authorize="hasRole('ADMIN')-->
-        <!-- Iterate over the content of the current page -->
-        <tr th:each="teacher : ${teachersPage.content}">
-            <td th:text="${teacher.id}"></td>
-            <td th:text="${teacher.uuid}"></td>
-            <td th:text="${teacher.firstname}"></td>
-            <td th:text="${teacher.lastname}"></td>
-            <td th:text="${teacher.vat}"></td>
-            <td th:text="${teacher.region}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <h1 class="page-title">Teachers Management</h1>
 
-    <div class="pagination-controls">
-        <!-- Link to first page (disabled if already on the first page) -->
-        <a th:if="${currentPage > 0}" th:href="@{/school/teachers(page=0, size=${teachersPage.size})}">&laquo; First</a>
-        <span th:if="${currentPage == 0}" class="disabled">&laquo; First</span>
-
-        <!-- Link to previous page (disabled if already on the first page) -->
-        <a th:if="${currentPage > 0}" th:href="@{/school/teachers(page=${currentPage - 1}, size=${teachersPage.size})}">&lsaquo; Prev</a>
-        <span th:if="${currentPage == 0}" class="disabled">&lsaquo; Prev</span>
-
-        <!-- Display current page / total pages -->
-        <span th:text="${currentPage + 1} + ' / ' + ${totalPages}"></span>
-
-        <!-- Link to next page (disabled if on the last page) -->
-        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/school/teachers(page=${currentPage + 1}, size=${teachersPage.size})}">Next &rsaquo;</a>
-        <span th:if="${currentPage + 1 == totalPages}" class="disabled">Next &rsaquo;</span>
-
-        <!-- Link to last page (disabled if already on the last page) -->
-        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/school/teachers(page=${totalPages - 1}, size=${teachersPage.size})}">Last &raquo;</a>
-        <span th:if="${currentPage + 1 == totalPages}" class="disabled">Last &raquo;</span>
+    <div class="action-buttons">
+        <a th:href="@{/school/teachers/insert}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Insert Teacher
+        </a>
     </div>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>UUID</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>VAT</th>
+                <th>Region</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+    <!--        sec:authorize="hasRole('ADMIN')-->
+            <!-- Iterate over the content of the current page -->
+            <tr th:each="teacher : ${teachersPage.content}">
+                <td th:text="${teacher.id}"></td>
+                <td th:text="${teacher.uuid}"></td>
+                <td th:text="${teacher.firstname}"></td>
+                <td th:text="${teacher.lastname}"></td>
+                <td th:text="${teacher.vat}"></td>
+                <td th:text="${teacher.region}"></td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+
+<!--    <table class="teacher-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>First Name</th>-->
+<!--            <th>Last Name</th>-->
+<!--            <th>Email</th>-->
+<!--            <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Sample row - replace with Thymeleaf iteration &ndash;&gt;-->
+<!--        <tr>-->
+<!--            <td>1</td>-->
+<!--            <td>John</td>-->
+<!--            <td>Doe</td>-->
+<!--            <td>john.doe@example.com</td>-->
+<!--            <td>-->
+<!--                <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>-->
+<!--                <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+
 </div>
 
+<div class="pagination-controls">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
