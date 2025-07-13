@@ -2,6 +2,8 @@ package gr.aueb.cf.teacherapp.service;
 
 import gr.aueb.cf.teacherapp.core.exceptions.EntityAlreadyExistsException;
 import gr.aueb.cf.teacherapp.core.exceptions.EntityInvalidArgumentException;
+import gr.aueb.cf.teacherapp.core.exceptions.EntityNotFoundException;
+import gr.aueb.cf.teacherapp.dto.TeacherEditDTO;
 import gr.aueb.cf.teacherapp.dto.TeacherInsertDTO;
 import gr.aueb.cf.teacherapp.dto.TeacherReadOnlyDTO;
 import gr.aueb.cf.teacherapp.mapper.Mapper;
@@ -52,10 +54,60 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Teacher updateTeacher(TeacherEditDTO dto)
+            throws EntityInvalidArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
+
+//        if (teacherRepository.findByVat(dto.getVat()).isPresent()) {
+//            throw new EntityAlreadyExistsException("Teacher", "Teacher with vat " + dto.getVat() + " already exists");
+//        }
+
+        System.out.println("DTO" + dto);
+//        Teacher teacher = mapper.mapToTeacherEntity(dto);
+        Teacher teacher = teacherRepository.findByUuid(dto.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher not found"));
+        System.out.println("Teacher found" + teacher);
+
+        if (!teacher.getVat().equals(dto.getVat())) {
+            if (teacherRepository.findByVat(dto.getVat()).isEmpty()) teacher.setVat(dto.getVat());
+                    else throw new EntityAlreadyExistsException("Teacher", "Teacher with VAT " + dto.getVat() + " already exists");
+        }
+
+        teacher.setFirstname(dto.getFirstname());
+        teacher.setLastname(dto.getLastname());
+
+        if (!teacher.getRegion().getId().equals(dto.getRegionId())) {
+            Region region = regionRepository.findById(dto.getRegionId())
+                    .orElseThrow(() -> new EntityInvalidArgumentException("Region", "Invalid region ID"));
+
+            Region currentRegion = teacher.getRegion();
+
+            // First remove from current region
+            if (currentRegion != null) {
+                currentRegion.removeTeacher(teacher);
+            }
+
+            // Then add to new region
+            region.addTeacher(teacher);
+            System.out.println("REGION UPDATED");
+        }
+
+        return teacherRepository.save(teacher);
+    }
+
+    @Override
     @Transactional
     public Page<TeacherReadOnlyDTO> getPaginatedTeachers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Teacher> teacherPage = teacherRepository.findAll(pageable);
         return teacherPage.map(mapper::mapToTeacherReadOnlyDTO);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTeacherByUUID(String uuid) throws EntityNotFoundException {
+        Teacher teacher = teacherRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with uuid: " + uuid + " not exists"));
+        teacherRepository.deleteById(teacher.getId());
     }
 }

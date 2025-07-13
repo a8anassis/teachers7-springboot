@@ -4,6 +4,7 @@ import gr.aueb.cf.teacherapp.model.static_data.Region;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @Table(name = "teachers")
 public class Teacher extends AbstractEntity {
 
@@ -35,5 +37,17 @@ public class Teacher extends AbstractEntity {
     @PrePersist
     public void initializeUUID() {
         if (uuid == null) uuid = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return Objects.equals(id, teacher.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

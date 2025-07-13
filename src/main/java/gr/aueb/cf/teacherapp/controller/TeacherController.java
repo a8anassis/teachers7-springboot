@@ -2,10 +2,13 @@ package gr.aueb.cf.teacherapp.controller;
 
 import gr.aueb.cf.teacherapp.core.exceptions.EntityAlreadyExistsException;
 import gr.aueb.cf.teacherapp.core.exceptions.EntityInvalidArgumentException;
+import gr.aueb.cf.teacherapp.core.exceptions.EntityNotFoundException;
+import gr.aueb.cf.teacherapp.dto.TeacherEditDTO;
 import gr.aueb.cf.teacherapp.dto.TeacherInsertDTO;
 import gr.aueb.cf.teacherapp.dto.TeacherReadOnlyDTO;
 import gr.aueb.cf.teacherapp.mapper.Mapper;
 import gr.aueb.cf.teacherapp.model.Teacher;
+import gr.aueb.cf.teacherapp.repository.TeacherRepository;
 import gr.aueb.cf.teacherapp.service.IRegionService;
 import gr.aueb.cf.teacherapp.service.ITeacherService;
 import gr.aueb.cf.teacherapp.service.TeacherService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/school")
@@ -30,6 +34,7 @@ public class TeacherController {
     private final Logger LOGGER = LoggerFactory.getLogger(TeacherController.class);
     private final ITeacherService teacherService;
     private final IRegionService regionService;
+    private final TeacherRepository teacherRepository;
     private final Mapper mapper;
 
 
@@ -81,5 +86,63 @@ public class TeacherController {
         model.addAttribute("totalPages", teachersPage.getTotalPages());
 
         return "teachers";  // Return Thymeleaf view (teachers.html)
+    }
+
+    // GET - Show edit form
+    @GetMapping("/teachers/edit/{uuid}")
+    public String showEditForm(@PathVariable String uuid, Model model) {
+        try {
+            Teacher teacher = teacherRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new EntityNotFoundException("Teacher","Teacher not found"));
+
+            model.addAttribute("teacherEditDTO", mapper.mapToTeacherEditDTO(teacher));
+            model.addAttribute("regions", regionService.findAllRegions());
+            return "teacher-edit-form";
+        } catch (EntityNotFoundException e) {
+            LOGGER.error("Teacher with uuid={} not inserted", uuid, e);
+            model.addAttribute("regions", regionService.findAllRegions()); // Re-populate
+            model.addAttribute("errorMessage", e.getMessage());
+            return "teacher-edit-form";
+        }
+    }
+
+    // POST - Process edit form
+    @PostMapping("/teachers/edit")
+    public String updateTeacher(@Valid @ModelAttribute("teacherEditDTO") TeacherEditDTO teacherEditDTO,
+                                BindingResult bindingResult,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("regions", regionService.findAllRegions());
+            System.out.println("ERRORS IN UPDATE");
+            return "teacher-edit-form";
+        }
+
+        try {
+            Teacher updatedTeacher = teacherService.updateTeacher(teacherEditDTO);
+            LOGGER.info("Teacher with id={} updated", updatedTeacher.getId());
+            TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(updatedTeacher);
+            //model.addAttribute("teacher", savedTeacher); -- request scope
+            redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(updatedTeacher));
+            return "redirect:/school/teachers";
+        } catch (EntityInvalidArgumentException | EntityNotFoundException | EntityAlreadyExistsException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("regions", regionService.findAllRegions());
+            return "teacher-edit-form";
+        }
+    }
+
+    @GetMapping("/teachers/delete/{uuid}")  // Using GET for simplicity
+    public String deleteTeacher(@PathVariable String uuid, Model model) {
+        try {
+           teacherService.deleteTeacherByUUID(uuid);
+            return "redirect:/school/teachers";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("regions", regionService.findAllRegions());
+            return "teachers";
+        }
+
     }
 }

@@ -177,10 +177,12 @@
                 <td th:text="${teacher.vat}"></td>
                 <td th:text="${teacher.region}"></td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                    <a th:href="@{/school/teachers/edit/{uuid}(uuid=${teacher.uuid})}"
+                       class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a th:href="@{/school/teachers/delete/{uuid}(uuid=${teacher.uuid})}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Delete this teacher?')">Delete</a>
                 </td>
-
             </tr>
             </tbody>
         </table>
