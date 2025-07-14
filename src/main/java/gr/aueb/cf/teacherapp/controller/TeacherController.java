@@ -62,6 +62,10 @@ public class TeacherController {
             TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(savedTeacher);
             //model.addAttribute("teacher", savedTeacher); -- request scope
             redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(savedTeacher));
+
+            // The Post-Redirect-Get (PRG) pattern is a web development design pattern
+            // that prevents duplicate form submissions and improves user experience by redirecting
+            // after a POST request
             return "redirect:/school/teachers";
         } catch (EntityAlreadyExistsException | EntityInvalidArgumentException e) {
             LOGGER.error("Teacher with vat={} not inserted", teacherInsertDTO.getVat(), e);

@@ -13,15 +13,6 @@ body {
     padding: 0;
 }
 
-/*.header {*/
-/*    background-color: var(--dark-blue);*/
-/*    padding: 10px;*/
-/*}*/
-
-/*.header-logo {*/
-/*    height: 50px;*/
-/*}*/
-
 .main-content {
     padding: 20px;
     text-align: center;
@@ -42,12 +33,3 @@ body {
 .custom-button-green:hover {
     background-color: var(--green-color-hover);
 }
-
-/*.footer {*/
-/*    background-color: var(--light-color);*/
-/*    border-top: 5px solid var(--dark-blue);*/
-/*    padding-top: 25px;*/
-/*    padding-left: 10rem;*/
-/*    text-align: left;*/
-/*    min-height: 15vh;*/
-/*}*/
