@@ -1,4 +1,4 @@
-:root {
+/*:root {
     --color-white: #fff;
     --color-blue-300: rgb(0, 101, 179);
     --color-blue-dark: rgb(0, 51, 117);
@@ -62,4 +62,25 @@
 
 .items img {
     vertical-align: middle;
+}*/
+
+:root {
+    --color-blue-dark: rgb(0, 51, 117);
+    --color-blue-300: rgb(0, 101, 179);
+    --color-yellow: rgb(255, 221, 36);
+}
+.header-bg {
+    background-color: var(--color-blue-dark);
+}
+.header-line {
+    height: 8px;
+    background-color: var(--color-blue-300);
+}
+.logout-btn {
+    background-color: var(--color-yellow);
+    color: #000;
+}
+.gov-logo {
+    height: 58px;
+    width: auto;
 }

@@ -14,6 +14,8 @@
     <link rel="stylesheet" th:href="@{/css/trinsert.css}">
 </head>
 <body>
+<div th:replace="~{fragments/header2 :: headerFragment}"></div>
+
 <div class="container mt-4">
     <h2>Edit Teacher</h2>
 
@@ -59,5 +61,6 @@
         <a th:href="@{/school/teachers}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

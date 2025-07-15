@@ -16,14 +16,15 @@
 </head>
 <body>
 <!-- Include the header fragment -->
-<div th:replace="~{fragments/header :: headerFragment}"></div>
+<div th:replace="~{fragments/header2 :: headerFragment}"></div>
 
 <main class="main-content">
     <div class="outer-content">
         <div th:if="${errorMessage}" class="error">
             <p th:text="${errorMessage}"></p>
         </div>
-        <form method="POST" th:object="${teacherInsertDTO}">
+<!--        th:action="@{/teachers/insert}"-->
+        <form method="POST" th:action="@{/teachers/insert}" th:object="${teacherInsertDTO}">
             <div class="row">
                 <div>
                     <label for="firstname">First Name:</label><br>
@@ -57,7 +58,6 @@
                     </select>
                 </div>
             </div>
-
 
             <div class="row">
                 <button type="submit" class="custom-button-green">Save Teacher</button>

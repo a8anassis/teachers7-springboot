@@ -8,6 +8,7 @@ import gr.aueb.cf.teacherapp.dto.TeacherInsertDTO;
 import gr.aueb.cf.teacherapp.dto.TeacherReadOnlyDTO;
 import gr.aueb.cf.teacherapp.mapper.Mapper;
 import gr.aueb.cf.teacherapp.model.Teacher;
+import gr.aueb.cf.teacherapp.repository.RegionRepository;
 import gr.aueb.cf.teacherapp.repository.TeacherRepository;
 import gr.aueb.cf.teacherapp.service.IRegionService;
 import gr.aueb.cf.teacherapp.service.ITeacherService;
@@ -16,7 +17,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +31,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/school")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class TeacherController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TeacherController.class);
@@ -36,12 +39,22 @@ public class TeacherController {
     private final IRegionService regionService;
     private final TeacherRepository teacherRepository;
     private final Mapper mapper;
+    private final RegionRepository regionRepository;
 
+    @Autowired
+    public TeacherController(ITeacherService teacherService, IRegionService regionService,
+                             TeacherRepository teacherRepository, Mapper mapper, RegionRepository regionRepository) {
+        this.teacherService = teacherService;
+        this.regionService = regionService;
+        this.teacherRepository = teacherRepository;
+        this.mapper = mapper;
+        this.regionRepository = regionRepository;
+    }
 
     @GetMapping("/teachers/insert")
     public String getTeacherForm(Model model) {
         model.addAttribute("teacherInsertDTO", new TeacherInsertDTO());
-        model.addAttribute("regions", regionService.findAllRegions());
+        model.addAttribute("regions", regionRepository.findAll(Sort.by("name")));
         return "teacher-form";
     }
 
@@ -52,13 +65,13 @@ public class TeacherController {
         Teacher savedTeacher;
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("regions", regionService.findAllRegions()); // Re-populate regions
+            model.addAttribute("regions", regionRepository.findAll(Sort.by("name"))); // Re-populate regions regionService.findAllRegions()
             return "teacher-form";
         }
 
         try {
             savedTeacher = teacherService.saveTeacher(teacherInsertDTO);
-            LOGGER.info("Teacher with id={} inserted", savedTeacher.getId());
+            //LOGGER.info("Teacher with id={} inserted", savedTeacher.getId());
             TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(savedTeacher);
             //model.addAttribute("teacher", savedTeacher); -- request scope
             redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(savedTeacher));
@@ -68,8 +81,8 @@ public class TeacherController {
             // after a POST request
             return "redirect:/school/teachers";
         } catch (EntityAlreadyExistsException | EntityInvalidArgumentException e) {
-            LOGGER.error("Teacher with vat={} not inserted", teacherInsertDTO.getVat(), e);
-            model.addAttribute("regions", regionService.findAllRegions()); // Re-populate
+            // LOGGER.error("Teacher with vat={} not inserted", teacherInsertDTO.getVat(), e);
+            model.addAttribute("regions", regionRepository.findAll(Sort.by("name"))); // Re-populate
             model.addAttribute("errorMessage", e.getMessage());
             return "teacher-form";
         }
@@ -132,7 +145,7 @@ public class TeacherController {
             return "redirect:/school/teachers";
         } catch (EntityInvalidArgumentException | EntityNotFoundException | EntityAlreadyExistsException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("regions", regionService.findAllRegions());
+            model.addAttribute("regions", regionRepository.findAll(Sort.by("name")));
             return "teacher-edit-form";
         }
     }
@@ -144,7 +157,7 @@ public class TeacherController {
             return "redirect:/school/teachers";
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("regions", regionService.findAllRegions());
+            model.addAttribute("regions", regionRepository.findAll(Sort.by("name")));
             return "teachers";
         }
 
