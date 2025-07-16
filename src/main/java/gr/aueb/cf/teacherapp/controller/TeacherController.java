@@ -71,6 +71,7 @@ public class TeacherController {
 
         teacherInsertValidator.validate(teacherInsertDTO, bindingResult);
 
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("regions", regionRepository.findAll(Sort.by("name"))); // Re-populate regions regionService.findAllRegions()
             return "teacher-form";
