@@ -12,9 +12,6 @@ import lombok.*;
 @ToString
 public class TeacherEditDTO {
 
-//    @NotNull(message = "Το id δεν μπορεί να είναι null.")
-//    private Long id;
-
     @NotNull(message = "Το uuid δεν μπορεί να είναι null.")
     private String uuid;
 

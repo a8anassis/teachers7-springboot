@@ -26,23 +26,13 @@ public class Mapper {
                 teacher.getLastname(), teacher.getVat(), teacher.getRegion().getName());
     }
 
-    public User mapToUserEntity(UserInsertDTO userInsertDTO) {
-        return new User(null, userInsertDTO.getUsername(), userInsertDTO.getPassword(),
-                Role.valueOf(userInsertDTO.getRole().toUpperCase()));
-    }
-
     public TeacherEditDTO mapToTeacherEditDTO(Teacher teacher) {
         return new TeacherEditDTO(teacher.getUuid(),  teacher.getFirstname(),
                 teacher.getLastname(), teacher.getVat(), teacher.getRegion().getId());
     }
 
-//    public Teacher mapToTeacherEntity(TeacherEditDTO teacherEditDTO) {
-//        Teacher teacher = new Teacher();
-//        teacher.setId(teacherEditDTO.getId());
-//        teacher.setUuid(teacherEditDTO.getUuid());
-//        teacher.setFirstname(teacherEditDTO.getFirstname());
-//        teacher.setLastname(teacherEditDTO.getLastname());
-//        teacher.setVat(teacherEditDTO.getVat());
-//        return teacher;
-//    }
+    public User mapToUserEntity(UserInsertDTO userInsertDTO) {
+        return new User(null, userInsertDTO.getUsername(), userInsertDTO.getPassword(),
+                Role.valueOf(userInsertDTO.getRole().toUpperCase()));
+    }
 }
