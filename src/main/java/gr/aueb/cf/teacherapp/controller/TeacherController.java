@@ -13,6 +13,8 @@ import gr.aueb.cf.teacherapp.repository.TeacherRepository;
 import gr.aueb.cf.teacherapp.service.IRegionService;
 import gr.aueb.cf.teacherapp.service.ITeacherService;
 import gr.aueb.cf.teacherapp.service.TeacherService;
+import gr.aueb.cf.teacherapp.validator.TeacherEditValidator;
+import gr.aueb.cf.teacherapp.validator.TeacherInsertValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/school")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class TeacherController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TeacherController.class);
@@ -41,16 +43,18 @@ public class TeacherController {
     private final TeacherRepository teacherRepository;
     private final Mapper mapper;
     private final RegionRepository regionRepository;
+    private final TeacherInsertValidator teacherInsertValidator;
+    private final TeacherEditValidator teacherEditValidator;
 
-    @Autowired
-    public TeacherController(ITeacherService teacherService, IRegionService regionService,
-                             TeacherRepository teacherRepository, Mapper mapper, RegionRepository regionRepository) {
-        this.teacherService = teacherService;
-        this.regionService = regionService;
-        this.teacherRepository = teacherRepository;
-        this.mapper = mapper;
-        this.regionRepository = regionRepository;
-    }
+//    @Autowired
+//    public TeacherController(ITeacherService teacherService, IRegionService regionService,
+//                             TeacherRepository teacherRepository, Mapper mapper, RegionRepository regionRepository) {
+//        this.teacherService = teacherService;
+//        this.regionService = regionService;
+//        this.teacherRepository = teacherRepository;
+//        this.mapper = mapper;
+//        this.regionRepository = regionRepository;
+//    }
 
     @GetMapping("/teachers/insert")
     public String getTeacherForm(Model model) {
@@ -64,6 +68,8 @@ public class TeacherController {
                               BindingResult bindingResult, Model model,  RedirectAttributes redirectAttributes) {
 
         Teacher savedTeacher;
+
+        teacherInsertValidator.validate(teacherInsertDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("regions", regionRepository.findAll(Sort.by("name"))); // Re-populate regions regionService.findAllRegions()
@@ -130,6 +136,8 @@ public class TeacherController {
                                 BindingResult bindingResult,
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
+
+        teacherEditValidator.validate(teacherEditDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("regions", regionService.findAllRegions());

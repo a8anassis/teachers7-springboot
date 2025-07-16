@@ -65,6 +65,16 @@ public class TeacherService implements ITeacherService {
         }
     }
 
+//    @Override
+//    @Transactional(rollbackOn = Exception.class)
+//    public Teacher saveTeacher(TeacherInsertDTO dto) {
+//            Teacher teacher = mapper.mapToTeacherEntity(dto);
+//            Region region = regionRepository.findById(dto.getRegionId()).orElse(new Region());
+//            region.addTeacher(teacher);
+//            teacherRepository.save(teacher);
+//            return teacher;
+//    }
+
     /*
     ERROR, WARN, INFO, DEBUG, TRACE
     Scenario	        Recommended Level
