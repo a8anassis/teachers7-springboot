@@ -147,7 +147,7 @@ public class TeacherController {
 
         try {
             Teacher updatedTeacher = teacherService.updateTeacher(teacherEditDTO);
-            LOGGER.info("Teacher with id={} updated", updatedTeacher.getId());
+            // LOGGER.info("Teacher with id={} updated", updatedTeacher.getId());
             TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(updatedTeacher);
             //model.addAttribute("teacher", savedTeacher); -- request scope
             redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(updatedTeacher));
