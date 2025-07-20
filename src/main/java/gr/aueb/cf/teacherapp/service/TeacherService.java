@@ -88,7 +88,7 @@ public class TeacherService implements ITeacherService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Teacher updateTeacher(TeacherEditDTO dto)
+    public void updateTeacher(TeacherEditDTO dto)
             throws EntityInvalidArgumentException, EntityNotFoundException, EntityAlreadyExistsException {
 
         try {
@@ -120,8 +120,6 @@ public class TeacherService implements ITeacherService {
             }
             teacherRepository.save(teacher);
             log.info("Teacher with vat={} updated.", dto.getVat());
-            //return teacherRepository.save(teacher);
-            return teacher;
         } catch (EntityNotFoundException e) {
             log.error("Update failed for teacher with vat={}. Entity not found.", dto.getVat(), e);
             throw e; // Re-throw to trigger rollback
@@ -150,6 +148,8 @@ public class TeacherService implements ITeacherService {
             Teacher teacher = teacherRepository.findByUuid(uuid)
                     .orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with uuid: " + uuid + " not exists"));
             teacherRepository.deleteById(teacher.getId());
+            // εναλλακτικά teacherRepository.save() για soft delete
+            // Σε αυτή την περίπτωση χρειαζόμαστε πεδίο deleted (Boolean) και deletedAt
             log.info("Teacher with uuid={} deleted.", uuid);
         } catch (EntityNotFoundException e) {
             log.error("Update failed for teacher with uuid={}. Entity not found.", uuid, e);

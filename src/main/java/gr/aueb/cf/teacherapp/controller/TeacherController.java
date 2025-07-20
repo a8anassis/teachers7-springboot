@@ -142,16 +142,11 @@ public class TeacherController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("regions", regionService.findAllRegions());
-            System.out.println("ERRORS IN UPDATE");
             return "teacher-edit-form";
         }
 
         try {
-            Teacher updatedTeacher = teacherService.updateTeacher(teacherEditDTO);
-            // LOGGER.info("Teacher with id={} updated", updatedTeacher.getId());
-            TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(updatedTeacher);
-            //model.addAttribute("teacher", savedTeacher); -- request scope
-            redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(updatedTeacher));
+            teacherService.updateTeacher(teacherEditDTO);
             return "redirect:/school/teachers";
         } catch (EntityInvalidArgumentException | EntityNotFoundException | EntityAlreadyExistsException e) {
             model.addAttribute("errorMessage", e.getMessage());
