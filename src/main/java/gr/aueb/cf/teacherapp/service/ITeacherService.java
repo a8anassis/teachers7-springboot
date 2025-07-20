@@ -13,7 +13,7 @@ public interface ITeacherService {
     Teacher saveTeacher(TeacherInsertDTO dto)
             throws EntityAlreadyExistsException, EntityInvalidArgumentException;
 
-    Teacher updateTeacher(TeacherEditDTO dto)
+    void updateTeacher(TeacherEditDTO dto)
             throws EntityInvalidArgumentException, EntityNotFoundException, EntityAlreadyExistsException;
 
     Page<TeacherReadOnlyDTO> getPaginatedTeachers(int page, int size);
