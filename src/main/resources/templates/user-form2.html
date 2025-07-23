@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/userinsert.css}">
     <!-- Responsive meta tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -24,37 +25,35 @@
                     <h2 class="card-title mb-0">Create New User</h2>
                 </div>
 
+                <div th:if="${errorMessage}" class="error">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+
                 <div class="card-body">
-                    <form method="post" th:object="${userInsertDTO}" class="needs-validation" novalidate>
+                    <form method="post" th:object="${userInsertDTO}">
                         <!-- Username Field -->
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
-                                   th:field="*{username}" id="username" name="username" required>
-                            <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                            <input type="text" class="form-control" th:field="*{username}" id="username" name="username" required>
+                            <div th:if="${#fields.hasErrors('username')}">
+                                <p th:classappend="${#fields.hasErrors('username')} ? 'error'" th:errors="*{username}"></p>
+                            </div>
                         </div>
-
-                        <!-- Password Field -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                                   th:field="*{password}" id="password" name="password" required>
-                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-                            <div class="form-text">Password must be at least 8 characters long</div>
+                            <input type="password" class="form-control" th:field="*{password}" id="password" required>
+                            <div th:if="${#fields.hasErrors('password')}">
+                                <p th:classappend="${#fields.hasErrors('password')} ? 'error'" th:errors="*{password}"></p>
+                            </div>
                         </div>
-
-                        <!-- Role Selection -->
                         <div class="mb-4">
                             <label for="role" class="form-label">Role</label>
                             <select class="form-select" th:field="*{role}" id="role" required>
-                                <option value="" disabled selected>Select a role</option>
                                 <option value="TEACHER">Teacher</option>
                                 <option value="STUDENT">Student</option>
                                 <option value="ADMIN">Admin</option>
                             </select>
                         </div>
-
-                        <!-- Submit Button -->
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">Create User</button>
                         </div>

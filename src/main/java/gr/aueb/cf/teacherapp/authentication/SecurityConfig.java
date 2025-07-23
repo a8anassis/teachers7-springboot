@@ -29,7 +29,7 @@ public class SecurityConfig {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
-                        .defaultSuccessUrl("/school/teachers", false)
+                        .defaultSuccessUrl("/school/teachers", true)
                         .permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())       // username, password and session cookies

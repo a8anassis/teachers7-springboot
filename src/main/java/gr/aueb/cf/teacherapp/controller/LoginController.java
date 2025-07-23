@@ -12,4 +12,10 @@ public class LoginController {
     public String login(Principal principal) {
         return principal == null ? "loginb" : "redirect:/school/teachers";
     }
+
+
+    @GetMapping("/")
+    public String root(Principal principal) {
+        return principal == null ? "index2" : "redirect:/school/teachers";
+    }
 }

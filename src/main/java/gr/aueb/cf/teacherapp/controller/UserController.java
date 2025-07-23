@@ -1,14 +1,17 @@
 package gr.aueb.cf.teacherapp.controller;
 
+import gr.aueb.cf.teacherapp.core.exceptions.EntityAlreadyExistsException;
 import gr.aueb.cf.teacherapp.dto.UserInsertDTO;
 import gr.aueb.cf.teacherapp.mapper.Mapper;
 import gr.aueb.cf.teacherapp.model.User;
 import gr.aueb.cf.teacherapp.service.UserService;
+import gr.aueb.cf.teacherapp.validator.UserInsertValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,30 +25,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/school")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-    private final Mapper mapper;
+    private final UserInsertValidator userInsertValidator;
 
     @GetMapping("/users/register")
     public String getUserForm(Model model) {
         model.addAttribute("userInsertDTO", new UserInsertDTO());
-        return "user-form2";
+        return "user-form";
     }
 
     @PostMapping("/users/register")
     public String insertUser(@Valid @ModelAttribute("userInsertDTO") UserInsertDTO userInsertDTO,
-                             BindingResult bindingResult,
-                             Model model, RedirectAttributes attrs) {
-
+                             BindingResult bindingResult, Model model) {
+        userInsertValidator.validate(userInsertDTO, bindingResult);
         if (bindingResult.hasErrors()) {
-            return "user-form2";
+            return "user-form";
         }
-
-        User user = mapper.mapToUserEntity(userInsertDTO);
-
-        userService.saveUser(user);
-        return "redirect:/";
+        try {
+            //User user = mapper.mapToUserEntity(userInsertDTO);
+            userService.saveUser(userInsertDTO);
+            return "redirect:/";
+        } catch (EntityAlreadyExistsException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "teacher-form";
+        }
     }
-
 }

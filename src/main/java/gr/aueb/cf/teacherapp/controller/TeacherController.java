@@ -80,9 +80,9 @@ public class TeacherController {
         try {
             savedTeacher = teacherService.saveTeacher(teacherInsertDTO);
             //LOGGER.info("Teacher with id={} inserted", savedTeacher.getId());
-            TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(savedTeacher);
+            //TeacherReadOnlyDTO teacherReadOnlyDTO = mapper.mapToTeacherReadOnlyDTO(savedTeacher);
             //model.addAttribute("teacher", savedTeacher); -- request scope
-            redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(savedTeacher));
+            //redirectAttributes.addFlashAttribute("teacher", mapper.mapToTeacherReadOnlyDTO(savedTeacher));
 
             // The Post-Redirect-Get (PRG) pattern is a web development design pattern
             // that prevents duplicate form submissions and improves user experience by redirecting
@@ -155,16 +155,15 @@ public class TeacherController {
         }
     }
 
-    @GetMapping("/teachers/delete/{uuid}")  // Using GET for simplicity
+    @GetMapping("/teachers/delete/{uuid}")
     public String deleteTeacher(@PathVariable String uuid, Model model) {
         try {
            teacherService.deleteTeacherByUUID(uuid);
-            return "redirect:/school/teachers";
+           return "redirect:/school/teachers";
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("regions", regionRepository.findAll(Sort.by("name")));
             return "teachers";
         }
-
     }
 }
