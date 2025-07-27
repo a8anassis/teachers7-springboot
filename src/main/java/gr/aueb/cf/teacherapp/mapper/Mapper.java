@@ -1,6 +1,6 @@
 package gr.aueb.cf.teacherapp.mapper;
 
-import gr.aueb.cf.teacherapp.core.enums.Role;
+//import gr.aueb.cf.teacherapp.core.enums.Role;
 import gr.aueb.cf.teacherapp.dto.*;
 import gr.aueb.cf.teacherapp.model.Teacher;
 import gr.aueb.cf.teacherapp.model.User;
@@ -29,11 +29,16 @@ public class Mapper {
     }
 
     public User mapToUserEntity(UserInsertDTO userInsertDTO) {
-        return new User(null, userInsertDTO.getUsername(), userInsertDTO.getPassword(),
-                Role.valueOf(userInsertDTO.getRole().toUpperCase()));
+        return User.builder().username(userInsertDTO.getUsername())
+                .password(userInsertDTO.getPassword()).build();
     }
 
     public UserReadOnlyDTO mapUserToReadOnlyDTO(User user) {
-        return new UserReadOnlyDTO(user.getUsername(), user.getRole().name());
+//        return new UserReadOnlyDTO(user.getUsername(), user.getRole().name());
+        return new UserReadOnlyDTO(user.getUsername(), user.getRole().getName());
     }
 }
+
+
+//        return new User(null, userInsertDTO.getUsername(), userInsertDTO.getPassword(),
+//         Role.valueOf(userInsertDTO.getRole().toUpperCase()));

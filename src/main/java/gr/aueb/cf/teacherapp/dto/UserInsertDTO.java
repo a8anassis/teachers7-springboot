@@ -25,5 +25,6 @@ public class UserInsertDTO {
     )
     private String password;
 
-    private String role;
+//    private String role;
+    private Long roleId;
 }

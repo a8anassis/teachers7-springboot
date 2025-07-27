@@ -4,6 +4,7 @@ import gr.aueb.cf.teacherapp.core.exceptions.EntityAlreadyExistsException;
 import gr.aueb.cf.teacherapp.dto.UserInsertDTO;
 import gr.aueb.cf.teacherapp.mapper.Mapper;
 import gr.aueb.cf.teacherapp.model.User;
+import gr.aueb.cf.teacherapp.repository.RoleRepository;
 import gr.aueb.cf.teacherapp.service.UserService;
 import gr.aueb.cf.teacherapp.validator.UserInsertValidator;
 import jakarta.validation.Valid;
@@ -27,11 +28,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
     private final UserService userService;
     private final UserInsertValidator userInsertValidator;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/users/register")
     public String getUserForm(Model model) {
         model.addAttribute("userInsertDTO", new UserInsertDTO());
-        return "user-form";
+        model.addAttribute("roles", roleRepository.findAll(Sort.by("name")));
+        return "user-form2";
     }
 
     @PostMapping("/users/register")
@@ -39,15 +42,16 @@ public class UserController {
                              BindingResult bindingResult, Model model) {
         userInsertValidator.validate(userInsertDTO, bindingResult);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleRepository.findAll(Sort.by("name")));
             return "user-form";
         }
         try {
-            //User user = mapper.mapToUserEntity(userInsertDTO);
             userService.saveUser(userInsertDTO);
             return "redirect:/";
         } catch (EntityAlreadyExistsException e) {
+            model.addAttribute("roles", roleRepository.findAll(Sort.by("name")));
             model.addAttribute("errorMessage", e.getMessage());
-            return "teacher-form";
+            return "user-form";
         }
     }
 }

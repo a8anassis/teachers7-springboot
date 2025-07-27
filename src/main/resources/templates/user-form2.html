@@ -22,7 +22,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="card-title mb-0">Create New User</h2>
+                    <h2 class="card-title mb-0">Εγγραφή νέου Χρήστη</h2>
                 </div>
 
                 <div th:if="${errorMessage}" class="error">
@@ -47,15 +47,21 @@
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label for="role" class="form-label">Role</label>
-                            <select class="form-select" th:field="*{role}" id="role" required>
-                                <option value="TEACHER">Teacher</option>
-                                <option value="STUDENT">Student</option>
-                                <option value="ADMIN">Admin</option>
+                            <label for="role" class="form-label">Ρόλος</label>
+                            <select class="form-select" th:field="*{roleId}" id="role" required>
+                                <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
                             </select>
                         </div>
+<!--                        <div class="mb-4">-->
+<!--                            <label for="role" class="form-label">Role</label>-->
+<!--                            <select class="form-select" th:field="*{role}" id="role" required>-->
+<!--                                <option value="TEACHER">Teacher</option>-->
+<!--                                <option value="STUDENT">Student</option>-->
+<!--                                <option value="ADMIN">Admin</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Create User</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Δημιουργία Λογαριασμού</button>
                         </div>
                     </form>
                 </div>

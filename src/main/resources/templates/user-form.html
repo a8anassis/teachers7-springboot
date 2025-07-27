@@ -34,9 +34,9 @@
         <div>
             <label for="role">Role:</label>
             <select th:field="*{role}" id="role">
-                <option value="TEACHER">Teacher</option>
-                <option value="STUDENT">Student</option>
-                <option value="ADMIN">Admin</option>
+<!--                <option value="TEACHER">Teacher</option>-->
+<!--                <option value="STUDENT">Student</option>-->
+<!--                <option value="ADMIN">Admin</option>-->
             </select>
             <div th:if="${#fields.hasErrors('role')}">
                 <p th:classappend="${#fields.hasErrors('role')} ? 'error'" th:errors="*{role}"></p>
